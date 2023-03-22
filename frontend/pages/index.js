@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { authService } from '../src/services/auth/authService';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -22,11 +23,20 @@ export default function HomeScreen() {
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={(event) => {
-        event.preventDefault();
+      <form onSubmit={(e) => {
+        e.preventDefault();
 
-        // router.push('/auth-page-static');
-        router.push('/auth-page-ssr');
+        authService.login({
+          username: values.usuario,
+          password: values.senha
+        }).then(() => {
+          // router.push('/auth-page-static');
+          router.push('/auth-page-ssr');
+        }).catch((err) => {
+          console.error(err);
+          alert('Usuário e/ou senha estão incorretos!')
+        })
+
       }}>
         <input
           placeholder="Usuário" name="usuario"
